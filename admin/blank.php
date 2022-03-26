@@ -9,6 +9,7 @@
                 </div>
                 <!-- /.container-fluid -->
 
+                <h1>hi</h1>
             </div>
             <!-- End of Main Content -->
 
