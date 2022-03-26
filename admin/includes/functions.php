@@ -13,7 +13,7 @@
                 $addCategory= mysqli_query($connect, $query);
 
                 if (!$addCategory) {
-                die("Category Added Failed!". mysqli_error($addCategory));
+                die("Category Added Failed!". mysqli_error($connect));
                 }
                 else {
                     $message= '<div class="alert alert-success">Category Name Successfully Saved. </div>';
@@ -60,7 +60,7 @@
                             header("Location:all_category.php");
                         }
                         else {
-                            die("Delete Query Failed! ". mysqli_error($deleteQuery));
+                            die("Delete Query Failed! ". mysqli_error($connect));
                         }
                     
                     }

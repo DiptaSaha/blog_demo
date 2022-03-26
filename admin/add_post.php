@@ -26,8 +26,26 @@
                                                             </div>
                                                             <div class="form-row">
                                                                 <div class="form-group col-lg-6">
-                                                                    <label for="category">Post Category</label>
-                                                                    <input type="text" name="post_category" class="form-control" >
+                                                                    <label for="post_category">Post Category</label>
+                                                                    <select name="post_category" class="form-control form-control-info">
+
+                                                                    <option>--Please Select The Category--</option>
+                                                                    <?php 
+                                                                        $query= "SELECT * FROM category";
+                                                                        $allCategory= mysqli_query($connect, $query);
+                                                                        while ($row=mysqli_fetch_assoc($allCategory)) {
+                                                                            
+                                                                            $cat_id   = $row['cat_id'];
+                                                                            $cat_name = $row['cat_name'];?>
+
+                                                                                <option value="<?php echo $cat_id; ?>"><?php echo $cat_name; ?></option>
+
+
+                                                                     <?php   }
+
+                                                                    ?>
+                                                                   
+                                                                    </select>
                                                                 </div>
                                                                 <div class="form-group col-lg-6">
                                                                     <label for="tags">Post Tags</label>
@@ -63,23 +81,53 @@
 
 <?php
     if (isset($_POST['addPost'])) {
-               $post_title=  $_POST['post_title'];
-               $post_desc= $_POST['post_desc'];
-               $post_author= $_POST['post_author'];
-               $post_image= $_FILES['image']['name'];
-               $post_image_temp= $_FILES['image']['tmp_name'];
-               $post_category= $_POST['post_category'];
-               $post_tags= $_POST['post_tags'];
-               $location_img= "img/post-thumbnail";
-               move_uploaded_file($post_image_temp, "$location_img/$post_image");
+               $post_title    =  $_POST['post_title'];
+               $post_desc     = $_POST['post_desc'];
+               $post_author   = $_POST['post_author'];
+               $post_category = $_POST['post_category'];
+               $post_tags     = $_POST['post_tags'];
+               $location_img  = "img/post-thumbnail";
 
-               $query= "INSERT INTO post (post_title, post_description, post_author, post_thumb, post_category, post_tags, post_date) VALUES ('$post_title',' $post_desc','$post_author','$post_image','$post_category','$post_tags',now())";
-               $addPost=mysqli_query($connect,$query);
-               if ($addPost) {
-                   header("Location:all_posts.php");
-               } else {
-                die("Blog POST Added Failed!".mysqli_error($connect));       
-            }
+            //    Image Uplode Procces....
+               $post_image           = $_FILES['image'];
+               $post_image_name      = $_FILES['image']['name'];
+               $post_image_size      = $_FILES['image']['size'];
+               $post_image_temp      = $_FILES['image']['tmp_name'];
+               $post_image_type      = $_FILES['image']['type'];
+               $postAllowedExtention = array('jpg','jpge','png');
+               $postExtention        = strtolower(end(explode('.',$post_image_name)));
+               
+               
+               $formError =array();
+               if (strlen($post_title)<10) {
+                   $formError= 'Post Title is Too Short!!';
+               }
+               if (empty($post_image_name)) {
+                $formError= 'Please Upload Blog Post Thumbnail!!';
+               }
+               if (!empty($post_image_name) && !in_array($postExtention,$postAllowedExtention)) {
+                   $formError= 'Please Upload JPG, JPEG,PNG Formet.';
+               }
+               foreach ($formError as $error) {
+                  echo '<div class="alert alert-warning">' .$error. '</div>';
+               }
+               if(!empty($post_image_name))
+               {
+                $post_image=rand(0,10000) .'_'. $post_image_name;
+                move_uploaded_file($post_image_temp, "$location_img/$post_image");
+
+                $query= "INSERT INTO post (post_title, post_description, post_author, post_thumb, post_category, post_tags, post_date) VALUES ('$post_title',' $post_desc','$post_author','$post_image','$post_category','$post_tags',now())";
+                $addPost=mysqli_query($connect,$query);
+                if ($addPost) {
+                    header("Location:all_posts.php");
+                } 
+                else {
+                 die("Blog POST Added Failed!".mysqli_error($connect));       
+                }
+
+               }
+             
+              
                
 
     }

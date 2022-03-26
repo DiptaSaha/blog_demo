@@ -9,7 +9,7 @@
                             <div class="col-lg-12">
                                 <div class="card shadow mb-4">
                                         <div class="card-header py-3">
-                                                    <h6 class="m-0 font-weight-bold text-primary">All Blog Posts </h6>
+                                                 <h6 class="m-0 font-weight-bold text-primary">All Blog Posts </h6>
                                         </div>
                                         <div class="card-body">
                                             <!-- Blog Post List Table Start -->  
@@ -58,12 +58,36 @@
                                                             <td><?php echo $post_category;?></td>
                                                             <td><?php echo $post_date;?></td>
                                                             <td>
-                                                            <a href="" class="btn btn-outline-success"><i class="far fa-edit" title="Update"></i></a>
-                                                            <a href="" class="btn btn-outline-danger"><i class="fas fa-trash-alt" title="Delete"></i></a>
+                                                            <a href="updatePost.php?edit=<?php echo $post_id?>" class="btn btn-outline-success"><i class="far fa-edit" title="Update"></i></a>
+                                                            <a href="all_posts.php?delete=<?php echo $post_id?>" class="btn btn-outline-danger"><i class="fas fa-trash-alt" title="Delete"></i></a>
                                                     
                                                             </td>
                                                             </tr>
 
+                                                            <?php 
+                                                            
+                                                                if (isset($_GET['delete'])) {
+                                                                   
+                                                                    $post_id= $_GET['delete'];
+                                                                    $deleteQuery="SELECT * FROM post WHERE post_id ='$post_id'";
+                                                                    $deleteImg=mysqli_query($connect,$deleteQuery);
+                                                                    while ($row = mysqli_fetch_assoc($deleteImg) ) {
+                                                                        $thumbnail=$row['post_thumb'];
+                                                                    }
+                                                                    unlink("img/post-thumbnail/".$thumbnail);
+
+                                                                    $query= "DELETE FROM post WHERE post_id='$post_id'";
+                                                                    $deletePost=mysqli_query($connect,$query);
+                                                                    
+                                                                    if ($deletePost) {
+                                                                        header("Location:all_posts.php");
+                                                                    } else {
+                                                                        die("Query Failed!".mysqli_error($connect));
+                                                                    }
+                                                                    
+                                                                }
+
+                                                            ?>
 
                                                     <?php }
                                                         

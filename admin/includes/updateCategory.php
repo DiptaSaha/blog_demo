@@ -35,7 +35,7 @@
                         $query = "UPDATE category SET cat_name='$cat_name' WHERE cat_id ='$cat_id'";
                         $updateCategory= mysqli_query($connect, $query);
                             if (!$updateCategory) {
-                                die("Category Can Not Updated! ". mysqli_error($updateCategory));
+                                die("Category Can Not Updated! ". mysqli_error($connect));
                                     }
                                  else {      
                                        header("Location: all_category.php");
