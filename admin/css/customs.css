@@ -2,3 +2,7 @@ body{
     color: #45464c !important;
     font-weight: 600;
 }
+
+.bg-red-custom{
+    background-color: #f93154;
+}
