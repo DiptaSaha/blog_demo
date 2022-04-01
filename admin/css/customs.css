@@ -6,3 +6,9 @@ body{
 .bg-red-custom{
     background-color: #f93154;
 }
+.border-custom{
+    border: 2px solid rgb(167, 163, 163);
+}
+.table-custom{
+    font-size: 15px;
+}

@@ -20,12 +20,6 @@
                                                                     <input type="text" name="post_title" class="form-control" autocomplete="off">
                                                                 </div>
                                                                 <div class="form-group col-lg-6">
-                                                                    <label for="author">Post Author</label>
-                                                                    <input type="text" name="post_author" class="form-control" autocomplete="off">
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-row">
-                                                                <div class="form-group col-lg-6">
                                                                     <label for="post_category">Post Category</label>
                                                                     <select name="post_category" class="form-control form-control-info">
 
@@ -47,20 +41,25 @@
                                                                    
                                                                     </select>
                                                                 </div>
-                                                                <div class="form-group col-lg-6">
-                                                                    <label for="tags">Post Tags</label>
-                                                                    <input type="text" name="post_tags" class="form-control" >
-                                                                </div>
                                                             </div>
+                                                            
                                                             <div class="form-group">
                                                                 <label for="description">Description</label>
                                                                 <textarea name="post_desc" class="form-control" rows="5"></textarea>
                                                             </div>
                                                            
-                                                            <div class="form-group">
-                                                                <label >Post Thumbnail</label>
-                                                                <input type="file" name="image" class="form-control-file">
+                                                            <div class="form-row">
+                                                              
+                                                                <div class="form-group col-lg-6">
+                                                                    <label for="tags">Post Tags</label>
+                                                                    <input type="text" name="post_tags" class="form-control" >
+                                                                </div>
+                                                                <div class="form-group col-lg-6">
+                                                                    <label >Post Thumbnail</label>
+                                                                    <input type="file" name="image" class="form-control-file">
+                                                                </div>
                                                             </div>
+                                                            
                                                           
                                                             <div class="form-group">
                                                                 <input type="submit" name="addPost" value=" Add New Post " class="btn btn-primary btn-lg">
@@ -81,9 +80,9 @@
 
 <?php
     if (isset($_POST['addPost'])) {
-               $post_title    =  $_POST['post_title'];
-               $post_desc     = $_POST['post_desc'];
-               $post_author   = $_POST['post_author'];
+               $post_title    = $_POST['post_title'];
+               $post_desc     = mysqli_real_escape_string($connect,$_POST['post_desc']);
+               $post_author   = $_SESSION['name'];
                $post_category = $_POST['post_category'];
                $post_tags     = $_POST['post_tags'];
                $location_img  = "img/post-thumbnail";
@@ -117,6 +116,7 @@
                 move_uploaded_file($post_image_temp, "$location_img/$post_image");
 
                 $query= "INSERT INTO post (post_title, post_description, post_author, post_thumb, post_category, post_tags, post_date) VALUES ('$post_title',' $post_desc','$post_author','$post_image','$post_category','$post_tags',now())";
+               
                 $addPost=mysqli_query($connect,$query);
                 if ($addPost) {
                     header("Location:all_posts.php");

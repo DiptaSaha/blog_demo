@@ -1,3 +1,7 @@
+<?php include "../include/db.php";
+ob_start();
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,7 +13,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Register</title>
+    <title>Blog Sites Register</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -36,34 +40,41 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
-                            <form class="user">
+                            <form class="user" action="" method="POST">
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="text" class="form-control form-control-user" id="exampleFirstName"
-                                            placeholder="First Name">
+                                            placeholder="Full Name" name="name">
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control form-control-user" id="exampleLastName"
-                                            placeholder="Last Name">
+                                            placeholder="User Name" name="username">
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail"
-                                        placeholder="Email Address">
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="email" class="form-control form-control-user" id="exampleInputEmail"
+                                        placeholder="Email Address" name="email">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control form-control-user" id="exampleInputEmail"
+                                        placeholder="Phone Number" name="phone">
+                                    </div>
+                                </div>
+                               
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="password" class="form-control form-control-user"
-                                            id="exampleInputPassword" placeholder="Password">
+                                            id="exampleInputPassword" placeholder="Password" name="password">
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="password" class="form-control form-control-user"
-                                            id="exampleRepeatPassword" placeholder="Repeat Password">
+                                            id="exampleRepeatPassword" placeholder="Repeat Password" name="re_password">
                                     </div>
                                 </div>
-                                <a href="login.html" class="btn btn-primary btn-user btn-block">
-                                    Register Account
-                                </a>
+                                <input type="submit" name="register" value="Register Account" class="btn btn-primary btn-user btn-block">
+                                    
+                                
                                 <hr>
                                 <a href="index.html" class="btn btn-google btn-user btn-block">
                                     <i class="fab fa-google fa-fw"></i> Register with Google
@@ -72,12 +83,36 @@
                                     <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
                                 </a>
                             </form>
+                            <?php
+                            if (isset($_POST['register'])) {
+                                
+                                $name= mysqli_real_escape_string( $connect,$_POST['name']);
+                                $username= mysqli_real_escape_string( $connect,$_POST['username']);
+                                $email= mysqli_real_escape_string( $connect,$_POST['email']);
+                                $phone= mysqli_real_escape_string( $connect,$_POST['phone']);
+                                $password= mysqli_real_escape_string( $connect,$_POST['password']);
+                                $re_password= mysqli_real_escape_string( $connect,$_POST['re_password']);
+
+                                if ($password == $re_password) {
+                                   $hasdPassword = sha1($password);
+                                   $query= "INSERT INTO user ( name, username, email, phone, address, password, image, role, is_active, join_date) VALUES ('$name','$username','$email','$phone','','$hasdPassword','',2,0,now())";
+                                   $register= mysqli_query($connect,$query);
+                                   if (!$register) {
+                                       die("Registation Failed!".mysqli_error($connect));
+                                   }
+                                   else {
+                                       header("Location:index.php");
+                                   }
+                                }
+                            }
+                                
+                            ?>
                             <hr>
                             <div class="text-center">
-                                <a class="small" href="forgot-password.html">Forgot Password?</a>
+                                <a class="small" href="forgot-password.php">Forgot Password?</a>
                             </div>
                             <div class="text-center">
-                                <a class="small" href="login.html">Already have an account? Login!</a>
+                                <a class="small" href="login.php">Already have an account? Login!</a>
                             </div>
                         </div>
                     </div>
@@ -96,6 +131,11 @@
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
+
+<?php 
+ob_end_flush();
+
+?>
 
 </body>
 

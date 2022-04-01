@@ -1,6 +1,12 @@
-<?php include "../include/db.php"?>
-<?php include "functions.php"?>
-<?php ob_start()?>
+<?php 
+ include "../include/db.php";
+ include "functions.php";
+ ob_start();
+ session_start();
+ if (empty($_SESSION['email']) ) {
+    header("Location:index.php");
+ }
+ ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -35,7 +41,7 @@
         <ul class="navbar-nav bg-gradient-secondary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.php">
                 <div class="sidebar-brand-icon">
                     <i class="fas fa-user"></i>
                 </div>
@@ -47,7 +53,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="index.php">
+                <a class="nav-link" href="dashboard.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -100,12 +106,17 @@
                 <div id="comment" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Blog Comments:</h6>
-                        <a class="collapse-item" href="">Add Comments</a>
                         <a class="collapse-item" href="all_comments.php">All Comments</a>
                     </div>
                 </div>
             </li>
 
+
+            <?php
+            
+            if ($_SESSION['role'] == 1) {?>
+               
+                
             <!-- Nav Item - User Menu -->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#user"
@@ -123,6 +134,31 @@
                     </div>
                 </div>
             </li>
+            <!-- Nav Item - Websites Settings Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#setting"
+                    aria-expanded="true" aria-controls="setting">
+                    <i class="fas fa-fw fa-cogs "></i>
+                    <span>Websites Settings</span>
+                </a>
+                <div id="setting" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Web Site Logo & Social media Link:</h6>
+                        <a class="collapse-item" href="settings.php">Logo & Favicon</a>
+                        <a class="collapse-item" href="social.php">Social Media</a>
+                       
+                    </div>
+                </div>
+            </li>
+
+
+            <?php
+            }
+            
+            ?>
+
+
           
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -314,24 +350,27 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <?php 
-                                        //  $sql = "SELECT * FROM user;";
-                                        //  $allUserShow=mysqli_query($connect,$sql);
-                                        //  while ($row= mysqli_fetch_assoc($allUserShow)) {
-                                        //      $id           = $row['id'] ;
-                                        //      $name         = $row['name'] ;
-                                        //  }
-                                ?>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                                <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo  $_SESSION['name'];?></span>
+                                
+                                <?php if (!empty( $_SESSION['image'])) {?>
+                                    <img class="img-profile rounded-circle"
+                                    src="img/users/<?php  echo  $_SESSION['image']?>"> ;
+                                   <?php
+                                    }else {?>
+                                        <img class="img-profile rounded-circle"
+                                    src="img/users/avater.png"> ;
+                                   <?php
+                                       
+                                    } ?>
+                                
 
                                    
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="profile.php">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
@@ -344,7 +383,7 @@
                                     Activity Log
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="logout.php" >
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>

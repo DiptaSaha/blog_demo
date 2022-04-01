@@ -55,7 +55,15 @@
                                                             <th scope="row"><?php echo $i;?></th>
                                                             <td><?php echo $post_title;?></td>
                                                             <td><?php echo $post_author;?></td>
-                                                            <td><?php echo $post_category;?></td>
+                                                            <td><?php 
+                                                                    $query="SELECT * FROM category WHERE cat_id='$post_category'";
+                                                                    $allCategory= mysqli_query($connect,$query);
+                                                                    while ($row= mysqli_fetch_assoc($allCategory)) {
+                                                                       $cat_id= $row['cat_id'];
+                                                                       $cat_name= $row['cat_name'];
+                                                                    }
+                                                                    echo $cat_name;
+                                                            ?></td>
                                                             <td><?php echo $post_date;?></td>
                                                             <td>
                                                             <a href="updatePost.php?edit=<?php echo $post_id?>" class="btn btn-outline-success"><i class="far fa-edit" title="Update"></i></a>
